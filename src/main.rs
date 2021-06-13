@@ -18,26 +18,35 @@ struct AddInstruction {
 
 impl Instruction for LoadInstruction {
     fn execute(&self, registers: &mut Vec<usize>) {
-        println!("LOAD {} {}", self.destination, self.value);
         registers[self.destination] = self.value;
+    }
+
+    fn print_mnemonic(&self) {
+        println!("LOAD {}, {}", self.destination, self.value);
     }
 }
 
 impl Instruction for AddInstruction {
     fn execute(&self, registers: &mut Vec<usize>) {
-        println!(
-            "ADD {} {} {}",
-            self.destination, self.register_1, self.register_2
-        );
-
         let r1 = registers[self.register_1];
         let r2 = registers[self.register_2];
         registers[self.destination] = r1 + r2;
     }
+
+    fn print_mnemonic(&self) {
+        println!(
+            "ADD {}, {}, {}",
+            self.destination, self.register_1, self.register_2
+        );
+    }
 }
 
 trait Instruction {
-    fn execute(&self, registers: &mut Vec<usize>) {
+    fn execute(&self, _registers: &mut Vec<usize>) {
+        println!("TODO: Implement me");
+    }
+
+    fn print_mnemonic(&self) {
         println!("TODO: Implement me");
     }
 }
@@ -71,6 +80,7 @@ fn main() {
     }));
 
     for i in vm.executable_code {
+        i.print_mnemonic();
         i.execute(&mut vm.registers);
     }
 
